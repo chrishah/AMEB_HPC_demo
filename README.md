@@ -4,6 +4,16 @@
 
 ## Connect to the cluster
 
+Replace `username` below with your username.
+
+```bash
+#Uni empoyees / PhD students
+(user@host)-$ username@sauron1.uni-graz.at
+
+# For MSc student accounts
+(user@host)-$ BZEDVZ+username@sauron1.uni-graz.at
+```
+
 ## Meet the queue
 
 Try:
