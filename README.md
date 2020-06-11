@@ -29,7 +29,7 @@ You should be connected!!
 
 ## On Windows
 
-You are going to need an ssh client. The simplest one I know (simple in the sense that it should work on almost any Windows flavor) is [putty](https://www.putty.org/). The installation should be as easy as (see also [here](https://github.com/chrishah/AMEB_HPC_demo/blob/master/backup/putty/README.md):
+You are going to need an ssh client. The simplest one I know (simple in the sense that it should work on almost any Windows flavor) is [putty](https://www.putty.org/). The installation should be as easy as (see also [here](https://github.com/chrishah/AMEB_HPC_demo/blob/master/backup/putty/README.md)):
  - Go to the webpage
  - Download the 64-bit version for windows
  - Execute, and say yes, yes, yes (assuming you agree)
