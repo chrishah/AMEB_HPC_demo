@@ -119,7 +119,8 @@ The first few lines (all the ones starting with `#$ ` are instructions for the c
    - `-q all.q@C147` - specify the queue/node you want to submit to (in this case cluster administration has reserved node `C147` for our tests, so we submit directly to that). If this was not the case, we could just say `-q all.q`, then SGE would just assign us the a suitable node (for which we'd potentially have to compete for with other users). There is other queues available, which we can discuss later on.
    - `-pe smp 1` - request 1 core for your job. This could be up the maximum number of cores available on a given node - via smp I specify that all cores should be on the same node. Most software is designed for such use cases, but there are others which can use cores across multiple nodes (you would put, e.g. `-pe mpi 50` in such a case).
    - `-o log.$JOB_NAME.$JOB_ID.out` and `-e log.$JOB_NAME.$JOB_ID.err` specify the files where any output that the process might produce will be written to, this includes status of the process, errors that may have occured, etc.. We use variables in the filenames, so that they will be called automatically according to what you called your job and also get a unique job id.
-   -- the remainder you can basically leave as they are unless you want to do some a bit more unusual in which case you probably know what you are doing.
+   
+   - the remainder you can basically leave as they are unless you want to do some a bit more unusual in which case you probably know what you are doing anyway
  
 The rest is a mock analyses that gives some output. In a nutshell, the job will give some output and wait for 100-200 seconds, then finish.
 
