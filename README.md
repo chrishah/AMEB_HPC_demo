@@ -229,7 +229,7 @@ If you finished the above steps successfully, great. I hope you've learned somet
 #
 #$ -l h_vmem=10G         # Request Max. Virt. Mem.
 #
-#$ -q all.q@C147        # choose the queue
+#$ -q all.q 	        # choose the queue
 #$ -cwd                 # Change to current working directory
 #$ -V                   # Export environment variables into script
 #$ -pe smp 1            # Select the parallel environment
