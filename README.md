@@ -154,7 +154,8 @@ Once your jobs starts it will generate two files, something like `log.test.31195
 __You ran your first job on a HPC cluster - Congratulations!!!__
 
 
-## Set up conda and install Snakemake (skip and go to the next section if you're impatient)
+## Set up conda and install Snakemake
+(skip and go to the next section if you're impatient)
 
 To set us up with Snakemake we are going to use a package management system called `conda` (see [Documentation](https://docs.conda.io/en/latest/)).
 
@@ -179,7 +180,7 @@ Assuming you want to activate immediately.
 (user@host)-$ . ~/.bashrc
 ```
 
-If you install `conda` in this way it will be by default be configured to so that whenever you start a new shell you'll be setup in a virtual (base) conda environment - you may see your prompt change somewhat after you executed the above command. I don't want that so I disable this behaviour by executing the following command.
+If you install `conda` in this way it will by default be configured so that whenever you start a new shell you'll be setup in a virtual (base) conda environment - you may see your prompt change somewhat after you executed the above command. Nothing wrong with that in principle, but I don't want that so I disable this behaviour by executing the following command.
 ```bash
 (base) (user@host)-$ conda config --set auto_activate_base false
 ```
@@ -300,8 +301,11 @@ After you've done the above once, if you want to run Snakemake, you first need t
 (snakemake) (user@host)-$ snakemake -h
 ```
 
-And after, deactivate if you want.
+And after, deactivate if you want, and then exit Sauron.
 ```bash
 (snakemake) (user@host)-$ conda deactivate
+(user@host)-$ exit
 ```
 
+
+__Come again soon!!__
