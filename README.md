@@ -2,7 +2,7 @@
 
 ## Welcome
 
-We are going to connect to and run a few tests on the HPC cluster of the Uni Graz - it's called 'Sauron'. Currently Sauron has about 90 Compute nodes, with between 256 and 768 GB RAM per Node, and a total of ~2000 cores. All employees and students at Uni Graz can apply for access the cluster - see information [here](https://hpc-wiki.uni-graz.at/HLR%20Anmeldung/Account_Instructions.htm) (Uni Graz user account required). If you are attending the course your registration will be taken care of.
+We are going to connect to and run a few tests on the HPC cluster of the Uni Graz - it's called 'Sauron'. Currently Sauron has about 90 Compute nodes, with between 256 and 768 GB RAM per Node, and a total of ~2000 cores. All employees and students at Uni Graz can apply for access the cluster - see information [here](https://hpc-wiki.uni-graz.at/Wiki-Seiten/Homepage.aspx) (Uni Graz user account required). If you are attending the course your registration will be taken care of.
 
 ## Connect to the cluster
 
@@ -30,7 +30,7 @@ You should be connected!!
 ## On Windows
 
 You are going to need an ssh client. The simplest one I know (simple in the sense that it should work on almost any Windows flavor) is [putty](https://www.putty.org/). The installation should be as easy as (see also [here](https://github.com/chrishah/AMEB_HPC_demo/blob/master/backup/putty/README.md)):
- - Go to the webpage
+ - Go to the [putty](https://www.putty.org/) webpage
  - Download the 64-bit version for windows
  - Execute, and say yes, yes, yes (assuming you agree)
 
@@ -45,12 +45,51 @@ You will be prompted for your password (this is your regular University password
 
 Note that when entering your password you will most likely not see any asterisks or dots or something like that appearing as you type. Just press 'Enter' when you think you're done. 
 
-You should be connected!!
+__You just connected to a HPC system - Congratulations!!__
 
+You will see a terminal window, that allows you to issue commands. The prompt will look something like that:
+```bash
+(user@host)-$ 
+```
 
-## Meet the queue
+'user' will be replaced with your username and 'host' with the name of the computer you are currently connected to.
 
-HPC clusters usually have some kind of queuing system in place that organizes and manages the jobs of all users, i.e. if your job request a certain amount of resources, e.g. 20 cores and a total of 240GB RAM, the queuing system will hold your job until the requested resources are avaialable for you.
+In the following, for any command that is to be issued on the command line, I will add the prompt. Do not type this, but only whatever comes after the first space, i.e. the actual command.
+
+In order to work on this system you will need to get used to common Linux commands to move around and explore the file system (`cd`, `ls`, `pwd`), modify files, copy, remove and move files around (`cp`, `mv`, `rm`). Ideally you would also pick up some basic skills for manipulating text files, like pattern searches (`grep`), search/replace (`sed`) and things like that. We will have a session on this at the beginning of the seminar, but if you want to get started already, there is a million (ca.) tutorials online.
+
+See for example here the [Introduction to the UNIX shell](https://swcarpentry.github.io/shell-novice/) by the [software carpentry](https://software-carpentry.org/) initiative.
+
+If you're uncertain what a certain command is doing or how to use it exactly, there is usually a manpage that you can get displayed by typing `man command`. For example, `man cp` will show you everything you need to know (and more) about the command `cp`. To get 'out' of the manpage you need to press __q__ (for quit). 
+
+Also, usually commands have another help function, which you can normally see when you type `command -h` or `command --help` or `command -h`. This is not entirely uniform and depends on the particular program, but one of them usually helps.
+Try:
+```bash
+(user@host)-$ cp -h
+```
+Ok, that's not the one, perhaps this:
+```
+(user@host)-$ cp -help
+```
+Still not, but then, try:
+```
+(user@host)-$ cp --help
+```
+
+__Happy exploring!!!__
+
+## Meet the cluster
+
+If you want to know what's currently going on on the computer you are working on you can use `top` (exit with __q__), or, sometimes a bit more helpful `htop` (again exit with __q__).
+
+If you want to get an overview on the number, dimensions and current usage of the computers, a.k.a. nodes, in the system you can type the following and execute:
+```bash
+(user@host)-$ qinfo
+```
+
+Say, you want to run a process that requires 20 cores and 240GB of RAM. You can find out with `qinfo` how many nodes would be potentially up to the task and whether they are currently occupied.
+
+HPC clusters usually have some kind of queuing system in place that organizes and manages the jobs of all users, i.e. if your job request a certain amount of resources, e.g. 20 cores and a total of 240GB RAM, the queuing system will hold your job until the requested resources are avaialable for you. 
 
 Sauron uses the `SGE` (son of grid engine) system.
 
@@ -63,6 +102,8 @@ If you only want to see your jobs that are currently waiting/running, try:
 ```bash
 (user@host)-$ qstat -u $USER
 ```
+
+Another common queuing system is `SLURM` and in the near future the University of Graz HPC is actually going to change to this system, but once you know the principle of one it's easy to adapt to another system. Note that the commands `qinfo`, `qstat` and other's (see below) are specific to `SGE`, but there are equivalents in other systems.
 
 ## Create your first submission script
 
@@ -113,6 +154,7 @@ echo -e "\n[$(date)] - Done!\n"
 Save the file. If you are using `nano` press CTRL-x` then say 'yes' when asked if you want to save the changes.
 
 ### Some explanation:
+
 The first few lines (all the ones starting with `#$ ` are instructions for the cluster). You can use this as a basic template for future jobs, simply modifying it according to your respective needs.
    - `-N` give your job a name (no spaces in the name)
    - `-l h_vmem=2G` - request 2G of RAM per core
