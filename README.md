@@ -2,7 +2,7 @@
 
 ## Welcome
 
-We are going to connect to and run a few tests on the HPC cluster of the Uni Graz - it's called 'Sauron'. Currently Sauron has about 90 Compute nodes, with between 256 and 768 GB RAM per Node, and a total of ~2000 cores. All employees and students at Uni Graz can apply for access the cluster - see information [here](https://hpc-wiki.uni-graz.at/Wiki-Seiten/Homepage.aspx) (Uni Graz user account required). If you are attending the course your registration will be taken care of.
+We are going to connect to and run a few tests on the HPC cluster of the Uni Graz - it's called 'GSC1'. Currently GSC1 has about 20 Compute nodes, with up to 2TB RAM per Node, and a total of ~1000 cores. All employees and students at Uni Graz can apply for access the cluster - see information [here](https://hpc-wiki.uni-graz.at/Wiki-Seiten/Homepage.aspx) (Uni Graz user account required). If you are attending the course your registration will be taken care of.
 
 ## Connect to the cluster
 
@@ -18,7 +18,7 @@ Replace `username` below, with:
 
 Connect via ssh.
 ```bash
-(user@host)-$ ssh username@sauron1.uni-graz.at
+(user@host)-$ ssh username@l2.gsc1.uni-graz.at
 ```
 
 You will be prompted for your password (this is your regular University password you also use for email, etc.).
@@ -35,11 +35,11 @@ You are going to need an ssh client. The simplest one I know (simple in the sens
  - Execute, and say yes, yes, yes (assuming you agree)
 
 Once it's installed you can start the program, then enter into the field 'Host Name (or IP address)':
- - if you are employee - e.g. `musterm@sauron1.uni-graz.at`
- - if you are a student - `BZEDVZ+012musterm@sauron1.uni-graz.at`
+ - if you are employee - e.g. `musterm@l2.gsc1.uni-graz.at`
+ - if you are a student - `BZEDVZ+012musterm@l2.gsc1.uni-graz.at`
 
 Click 'open'.
-Then you will be warned that you are about to connect to an unknown computer. If you trust Sauron, say 'yes'.
+Then you will be warned that you are about to connect to an unknown computer. If you trust GSC1, say 'yes'.
 
 You will be prompted for your password (this is your regular University password you also use for email, etc.).
 
@@ -80,60 +80,51 @@ __Happy exploring!!!__
 
 ## Meet the cluster
 
-If you want to know what's currently going on on the computer you are working on you can use `top` (exit with __q__), or, sometimes a bit more helpful `htop` (again exit with __q__).
-
-If you want to get an overview on the number, dimensions and current usage of the computers, a.k.a. nodes, in the system you can type the following and execute:
-```bash
-(user@host)-$ qinfo
-```
-
-Say, you want to run a process that requires 20 cores and 240GB of RAM. You can find out with `qinfo` how many nodes would be potentially up to the task and whether they are currently occupied.
+If you want to know what's currently going on the computer you are working on you can use `top` (exit with __q__), or, sometimes a bit more helpful `htop` (again exit with __q__).
 
 HPC clusters usually have some kind of queuing system in place that organizes and manages the jobs of all users, i.e. if your job request a certain amount of resources, e.g. 20 cores and a total of 240GB RAM, the queuing system will hold your job until the requested resources are avaialable for you. 
 
-Sauron uses the `SGE` (son of grid engine) system.
+GSC1 uses the `SLURM` system.
 
 You can see what's currently going on in the queue with the following command.
 ```bash
-(user@host)-$ qstat
+(user@host)-$ squeue
 ```
 
 If you only want to see your jobs that are currently waiting/running, try:
 ```bash
-(user@host)-$ qstat -u $USER
+(user@host)-$ squeue -u $USER
 ```
 
-Another common queuing system is `SLURM` and in the near future the University of Graz HPC is actually going to change to this system, but once you know the principle of one it's easy to adapt to another system. Note that the commands `qinfo`, `qstat` and other's (see below) are specific to `SGE`, but there are equivalents in other systems.
+Note that the commands `squeue`, `sbatch` and other's (see below) are specific to `SLURM`, but there are equivalents in other systems.
 
 ## Create your first submission script
 
 The amount of resources you are requesting for your job and the actual commands that you want to be run are usually bundled in a submission script. Let's try to make one. 
 
-Open a new file called `my_first_submission.sge.sh` with a text editor - the simplest which is already installed is `nano`:
+Open a new file called `my_first_submission.slurm.sh` with a text editor - the simplest which is already installed is `nano`:
 ```bash
-(user@host)-$ nano my_first_submission.sge.sh
+(user@host)-$ nano my_first_submission.slurm.sh
 ```
 
 Now, enter (or copy/paste) the following text.
 ```bash
-
 #!/bin/bash
 #
-#$ -N test              # Job name
-#$ -S /bin/bash         # Set shell to bash
-#
-#$ -l h_vmem=2G         # Request Max. Virt. Mem.
-#
-#$ -q all.q@C147        # choose the queue
-#$ -cwd                 # Change to current working directory
-#$ -V                   # Export environment variables into script
-#$ -pe smp 1            # Select the parallel environment
-#
-#$ -o log.$JOB_NAME.$JOB_ID.out      # SGE-Output File
-#$ -e log.$JOB_NAME.$JOB_ID.err      # SGE-Error File
+#SBATCH -J my_first_job
+#SBATCH -N 1
+#SBATCH --cpus-per-task=1
+#SBATCH --ntasks=2
+#SBATCH --ntasks-per-core=2
+#SBATCH --mem=1000
+#SBATCH --time 00:10:00
+#SBATCh --hint=multithread
+#SBATCH --qos=hpc
 
-#print some info to log
-echo "Running under shell '${SHELL}' in directory '`pwd`' using $NSLOTS slots"
+#SBATCH --output slurm-%j.out
+#SBATCH --error slurm-%j.err
+
+#From here on out the magic happens
 echo "Host: $HOSTNAME"
 echo "Job: $JOB_ID"
 
@@ -156,13 +147,20 @@ Save the file. If you are using `nano` press CTRL-x` then say 'yes' when asked i
 ### Some explanation:
 
 The first few lines (all the ones starting with `#$ ` are instructions for the cluster). You can use this as a basic template for future jobs, simply modifying it according to your respective needs.
-   - `-N` give your job a name (no spaces in the name)
-   - `-l h_vmem=2G` - request 2G of RAM per core
-   - `-q all.q@C147` - specify the queue/node you want to submit to (in this case cluster administration has reserved node `C147` for our tests, so we submit directly to that). If this was not the case, we could just say `-q all.q`, then SGE would just assign us the a suitable node (for which we'd potentially have to compete for with other users). There is other queues available, which we can discuss later on.
-   - `-pe smp 1` - request 1 core for your job. This could be up the maximum number of cores available on a given node - via smp I specify that all cores should be on the same node. Most software is designed for such use cases, but there are others which can use cores across multiple nodes (you would put, e.g. `-pe mpi 50` in such a case).
-   - `-o log.$JOB_NAME.$JOB_ID.out` and `-e log.$JOB_NAME.$JOB_ID.err` specify the files where any output that the process might produce will be written to, this includes status of the process, errors that may have occured, etc.. We use variables in the filenames, so that they will be called automatically according to what you called your job and also get a unique job id.
+   - `-J` give your job a name (no spaces in the name)
+   - `-N 1` - request 1 node
+   - `--ntasks=2` - request 2 tasks (this will essentially give you 2 CPUs)
+   - `--cpus-per-task=1` - one computing unit per task
+   - `--ntasks-per-core=2` - in case of dual core processors you could run 2 tasks per core
+   - `--mem=1000M` - request 1000M RAM
+   - `--time 00:10:00` - runtime 10 minutes
+   - `--hint=multithread` - allow multhreading
+   - `--qos=hpc` - specify queue to submit to (there may be multiple)
+   - `--reservation=hahnc_1` - if you have a reservation
+   - `--nodelist=IT010214` - if you have a specific node you want your job to be run on. If omitted SLURM would just assign us the a suitable node (for which we'd potentially have to compete for with other users). 
+   - `--output slurm-%j.out` and `--output slurm-%j.err` specify the files where any output that the process might produce will be written to, this includes status of the process, errors that may have occured, etc.. We use variables in the filenames, so that they will always have the unique job id in the filename.
    
-   - the remainder you can basically leave as they are unless you want to do some a bit more unusual in which case you probably know what you are doing anyway
+   - the remainder you can basically leave as it is unless you want to do some a bit more unusual in which case you probably know what you are doing anyway
  
 The rest is a mock analyses that gives some output. In a nutshell, the job will give some output and wait for 100-200 seconds, then finish.
 
@@ -172,15 +170,15 @@ The rest is a mock analyses that gives some output. In a nutshell, the job will 
 Execute the following, to submit your job to the queue.
 
 ```bash
-(user@host)-$ qsub my_first_submission.sge.sh
+(user@host)-$ sbatch my_first_submission.sge.sh
 ```
 
 If you want to know the status of your job you can check via:
 ```bash
 #to see all queued jobs
-(user@host)-$ qstat
+(user@host)-$ squeue
 #to see only your jobs
-(user@host)-$ qstat -u $USER
+(user@host)-$ squeue -u $USER
 ```
 
 Once your jobs starts it will generate two files, something like `log.test.311953.out` and `log.test.311953.err` (the number will be different in your case - this is the unique job identifier). You can look into the files with `less`. Exit `less` by typing 'q'. Or since it's not too much output you could use `cat`.
@@ -196,6 +194,15 @@ Once your jobs starts it will generate two files, something like `log.test.31195
 
 __You ran your first job on a HPC cluster - Congratulations!!!__
 
+## Connect to a compute node for interactive use
+
+Instead of submitting jobs one can also request resources for immeciate and interactive use.
+
+```bash
+(user@host)-$ srun --mem=8G --ntasks=4 --cpus-per-task=1 --time=02:00:00 --pty bash
+```
+
+This will get you onto a compute node with the requested resources for two hours.
 
 ## Set up conda and install Snakemake
 (skip and go to the next section if you're impatient)
@@ -204,6 +211,7 @@ To set us up with Snakemake we are going to use a package management system call
 
 First we need to setup `conda`. I will create a new directory called `conda`, then move to it, then download the installation script.
 ```bash
+(user@host)-$ cd ~
 (user@host)-$ mkdir conda
 (user@host)-$ cd conda
 (user@host)-$ wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.2-Linux-x86_64.sh
@@ -344,7 +352,7 @@ After you've done the above once, if you want to run Snakemake, you first need t
 (snakemake) (user@host)-$ snakemake -h
 ```
 
-And after, deactivate if you want, and then exit Sauron.
+And after, deactivate if you want, and then exit GSC1.
 ```bash
 (snakemake) (user@host)-$ conda deactivate
 (user@host)-$ exit
