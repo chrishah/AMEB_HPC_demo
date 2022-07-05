@@ -9,8 +9,8 @@
 #SBATCH --time 00:10:00
 #SBATCh --hint=multithread
 #SBATCH --qos=hpc
-#SBATCH --reservation=hahnc_1` # if you have a reservation
-#SBATCH --nodelist=IT010214 #if you want a specific node
+#SBATCH --reservation=hahnc_1
+#SBATCH --nodelist=IT010214
 
 #SBATCH --output slurm-%j.out
 #SBATCH --error slurm-%j.err

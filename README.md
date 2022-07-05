@@ -120,6 +120,8 @@ Now, enter (or copy/paste) the following text.
 #SBATCH --time 00:10:00
 #SBATCh --hint=multithread
 #SBATCH --qos=hpc
+#SBATCH --reservation=hahnc_1
+#SBATCH --nodelist=IT010214
 
 #SBATCH --output slurm-%j.out
 #SBATCH --error slurm-%j.err
