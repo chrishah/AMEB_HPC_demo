@@ -2,6 +2,7 @@
 
 ## Welcome
 
+
 We are going to connect to and run a few tests on the HPC cluster of the Uni Graz - it's called 'Sauron'. Currently Sauron has about 90 Compute nodes, with between 256 and 768 GB RAM per Node, and a total of ~2000 cores. All employees and students at Uni Graz can apply for access the cluster - see information [here](https://hpc-wiki.uni-graz.at/Wiki-Seiten/Homepage.aspx) (Uni Graz user account required). If you are attending the course your registration will be taken care of.
 
 ## Connect to the cluster
