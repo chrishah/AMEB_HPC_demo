@@ -119,7 +119,7 @@ Now, enter (or copy/paste) the following text.
 #SBATCH --mem=1000
 #SBATCH --time 00:10:00
 #SBATCh --hint=multithread
-#SBATCH --qos=hpc
+#SBATCH --partition=hpc
 #SBATCH --reservation=hahnc_1
 #SBATCH --nodelist=IT010214
 
@@ -156,11 +156,18 @@ The first few lines (all the ones starting with `#$ ` are instructions for the c
    - `--ntasks-per-core=2` - in case of dual core processors you could run 2 tasks per core
    - `--mem=1000M` - request 1000M RAM
    - `--time 00:10:00` - runtime 10 minutes
-   - `--hint=multithread` - allow multhreading
-   - `--qos=hpc` - specify queue to submit to (there may be multiple)
-   - `--reservation=hahnc_1` - if you have a reservation
-   - `--nodelist=IT010214` - if you have a specific node you want your job to be run on. If omitted SLURM would just assign us the a suitable node (for which we'd potentially have to compete for with other users). 
+   - `--hint=multithread` - allow multihreading
+   - `--partition=hpc` - specify queue to submit to (there may be multiple)
    - `--output slurm-%j.out` and `--output slurm-%j.err` specify the files where any output that the process might produce will be written to, this includes status of the process, errors that may have occured, etc.. We use variables in the filenames, so that they will always have the unique job id in the filename.
+
+
+***NOTE***
+> The setup above can basically be used as a template for most situations, from which you can adjust certain ressource requests for your particular job, say you want to request a runtime of 48 hours, you could adjust to `--time 48:00:00`, or you want more RAM, say 500GB: `--mem=500G`. If you go up with certain resource requests you will potentially have to wait longer for your job to start, because only a subset of compute nodes in the network may be able to fullfill you requirements and they may be busy with other users jobs.
+
+
+The following parameters are specific to the particular setup we have in the course and do not apply if you work on the cluster regularly. Please leave them out of your submission scripts unless you're asked to include them specifically or you know what you're doing.
+  - `--reservation=hahnc_1` - if you have a reservation
+  - `--nodelist=IT010214` - if you have a specific node you want your job to be run on. If omitted SLURM would just assign us the a suitable node (for which we'd potentially have to compete for with other users). 
    
    - the remainder you can basically leave as it is unless you want to do some a bit more unusual in which case you probably know what you are doing anyway
  
