@@ -179,7 +179,7 @@ The rest is a mock analyses that gives some output. In a nutshell, the job will 
 Execute the following, to submit your job to the queue.
 
 ```bash
-(user@host)-$ sbatch my_first_submission.sge.sh
+(user@host)-$ sbatch my_first_submission.slurm.sh
 ```
 
 If you want to know the status of your job you can check via:
@@ -278,6 +278,9 @@ After that, if you want to run Snakemake, you first need to enter the environmen
 ```
 
 ## Setting up conda and a snakemake environment (for the impatient)
+
+***THIS NEEDS TO BE ADJUSTED IF YOU WORK ON SLURM***
+
 
 If you finished the above steps successfully, great. I hope you've learned somethings along the way. If you can't be bothered to do all the manual work and are eager to submit jobs to the cluster you can do the whole process inside a cluster job. Copy the following into a file called, e.g. `install_miniconda_plus_snakemake.sge.sh`.
 ```bash
